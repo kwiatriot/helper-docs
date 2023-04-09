@@ -32,7 +32,7 @@ Using a dot notation for the unit
 set interfaces ge-0/0/0.0 family inet address x.x.x.x/CIDR
 ```
 ### Output of `show' Command
-```json
+```
 [edit interfaces ge-0/0/0]
 
 unit 0 {
@@ -45,7 +45,7 @@ unit 0 {
 ## User Config and Auth
 
 ### Basic config for local password authentication
-```json
+```
 [system login]
 user wayne {
     class NOC; /* Class definition below */
@@ -63,7 +63,7 @@ class NOC {
 ## SNMP
 
 ### Sample config
-```json
+```
 [edit snmp]
 
 description SomeRouter;
