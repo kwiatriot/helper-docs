@@ -3,7 +3,8 @@ This is a repo of notes taken while working on ENSLD (300-420) certification
 
 
 ## BGP
-Commands
+
+### Commands
 
 Start a BGP process on tcp port 179: 
 `router bgp {local-as}`
@@ -24,7 +25,13 @@ To configure a neighbor as a Route Reflector Client
 ### Route Reflectors
 - Configured per address family
 
-Rule #1: 
+#### Rule #1: 
  - RR will only forward routes learned from non-clients to clients. 
  - It will not advirtise routes to non-client peers.
 
+#### Rule #2
+ - RR will forward all NLRI recieved from clients to non-clients and clients
+ - RR clients with recognize a loop and discard the route
+
+ #### Rule #3
+  - eBGP acts normal with RR clients
