@@ -32,11 +32,31 @@ To configure a neighbor as a Route Reflector Client
 neighbor {<i>IP</i>} route-reflector-client
 </pre>
 
-To configure multiple paths to a subnet:
+To configure multiple paths to a prefix with a single ISP:
  - Under address-family:
  <pre>
  maximum-paths {<i>number of paths</i>}
  </pre>
+
+### Design Considerations
+
+#### Load Balancing Outbound Connection - Single ISP
+Use the `maximum-paths` command to set number of paths to prefix
+
+#### Load Sharing Outbound Connections - Mulithomed ISPs
+ - Cannot use max-path command.
+ - Use prefix list or access list to split traffic
+ - Manually configure the split of traffic
+
+#### Manipulate Inbound Connections - Single ISP
+ - Single ISP with dual connection
+ - Use route-map to advirtise MED value
+ - ISP will prefer the connection with the lowest MED
+
+#### Manipulate Inbound Connections - Multihomed ISPs
+ - Dual ISP
+ - Use route-map to utilize as-path prepending
+ - This adds extra ASN advirtised for the prefix
 
 ### Route Reflectors
 - Configured per address family
