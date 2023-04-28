@@ -95,3 +95,56 @@ Use the `maximum-paths` command to set number of paths to prefix
 11) Lowest Neighbor Router ID
 12) Min Cluster List Length
 13) Lowest Neighbor IP addess
+
+
+## IS-IS
+
+### Commands
+
+To start the IS-IS routing process:
+ <pre>
+ router is-is
+ </pre>
+
+To set the `is-type`:
+- under the is-is process
+<pre>
+is-type {<i>level-1, level-2, level-1-2</i>} 
+</pre>
+
+Mostly used in SP networks, but active in enterprise networks due to DNA Center.
+ - DNA Center deploys IS-IS as an underlay
+
+Some commonalities to OSPF
+
+ES = End system
+IS = Intermediate system
+
+### Levels
+
+Level 0
+ - ES to IS
+
+Level 1
+- Intra-area IS to IS
+
+Level 2
+- Interarea IS to IS
+
+Level 3
+- AS to AS _(Cisco does not support level 3)_
+
+### IS-IS Areas
+
+While a link state protocol there is no need for an area 0, but it is best practice to have
+transit area to preform level 2 communications.
+
+When a router is configured for `is-type level-1` it will only form a neighborship:
+ - Only with other level-1 routers
+ - AND the area number must match
+ - This is intra-area communication
+
+When a router is configured for `is type level-1-2` it will for adjencencies with:
+ - level-1 routers
+ - level-2 routers
+ - Sends defualt route into level-1 areas
