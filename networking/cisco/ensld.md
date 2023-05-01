@@ -96,6 +96,80 @@ To configure multiple paths to a prefix with a single ISP:
  maximum-paths {<i>number of paths</i>}
  </pre>
 
+## EIGRP
+
+Distance-vector protocol by definition, but has some link-sate features.
+ - Exams may call it Hybrid protocol
+ - Administrative Distance of 90
+
+2 forms Classic and Named
+ - Classic:
+  - meant for IPv4 Unicast
+  - specify the ASN in the process
+ - Named:
+  - can specify neighbors by address family (v4 and v6)
+  - Unicast, Multicast, or by vrf
+
+While we use a network statement and wildcard mask for neighbors, EIGRP uses that to determine 
+which interfaces to use in the process.
+
+Uses RTP - Reliable transport protocol
+ - uses a series of sequance and ack packets for updates
+
+224.0.0.10 - EIGRP Multicast address for hello packets
+ - Route updates use unicast
+
+Query packet happens when a route or connection goes down. All eigrp routers will respond to a query.
+
+Hello packet timer defualt 5 seconds - WAN or slow links 60 seconds
+Dead interval (Hold Timer) defualt 15 seconds - WAN or slow links 180 seconds
+
+Summerization occurs on an interface basis. Mostly done in the Distribution layer
+ - Leak Map can be used for traffic engineering out multiple summerized routes
+
+Passive interface will not form an adjacency but the route will be advirtised out
+
+Authentication for named mode is done under the EIGRP proccess and `address-family` but specified per interface.
+ - md5
+ - hmac-sha-256
+
+Authentication for classic is done on the interface
+ - Only md5
+ - Can use `eigrp upgrade-cli _{Named Mode Process}_ to switch to named mode
+
+### Metric
+
+Uses 5 components, called K values:
+ - Bandwidth * _(Used by EIGRP DUAL)_
+ - Delay * _(Used by EIGRP DUAL)_
+ - Reliability (Usually set to 0)
+ - Load (Usually set to 0)
+ - MTU (Usually set to 0)
+
+Feasiable Distance is the route with the lowest metric this becomes the successor.
+ - AD plus local metric
+Advirtised distance or Reported distance is what is sent by the neighbor
+
+### Feasibility Condition
+
+- Backup route is called feasiable succesor
+
+- If the Advirtised Distance is lower then our Feasible Distance
+
+### Autonomous Systems/Query Domain
+
+Different then areas or levels in that you need to redistribute between AS in EIGRP.
+ - These are external EIGRP routes and have an Administrative Distance of 170.
+
+Queries are sent when links go down, they must be responded to by. This creates a scalablity issue.
+
+AS are used to limit query domains within an EIGRP design.
+ - Stub routers do not advirtise to other EIGRP neighbors
+ - Leak Map, is a route map to advirtise routes behind a stub router (Old way)
+ - Stub Sites, only in named EIGRP, will not advirtise routes between configured WAN interfaces
+
+### Commands
+
 ## IS-IS
 
 ### Basics
@@ -107,6 +181,7 @@ Some commonalities to OSPF
  - Link state protocol
  - Send LSP (Link state protocol units)
  - Uses areas
+ - Supports v4 and v6 addresses
 
 ES = End system
 IS = Intermediate system
@@ -152,7 +227,7 @@ When a router is configured for `is type level-1-2` it will for adjencencies wit
   - Eaxmple: 49.0001.0000.0000.0001.00
   1) AFI (Almost always 49)
   2) Area
-  3-5) Unique Identifier, like a MAC addess or router ID
+  3-5) System ID - Unique Identifier, like a MAC addess or router ID
   6) 00 = identifying self. Any other number identifys traffic type
 
 ### Metric
