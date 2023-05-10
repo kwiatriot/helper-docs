@@ -96,6 +96,118 @@ To configure multiple paths to a prefix with a single ISP:
  maximum-paths {<i>number of paths</i>}
  </pre>
 
+## OSPF
+
+To form a neighbor, the following must match
+ - Area
+ - Area Type
+ - Hello and Dead timers
+ - MTU
+
+Neighbors must have a unique `router-id`, the selection process:
+1) Configured ID with the `router-id` command.
+2) Highest Loopback address
+3) Highest IP configured on an interface
+
+Ethernet Defualt timers:
+- Hello = 10 sec
+- Dead = 40 sec (4x Hello)
+
+NBMA (Non Broadcast Muiltiaccess)
+ - Hello = 30 sec
+ - Dead = 120 sec (4x Hello)
+
+###  DR and BDR
+
+224.0.0.5 - Multicast address for all OSPF routers
+
+Router IDs are only used if OSPF Priority has NOT been configured first. By defualt, OSPF 
+has a Priority of 1. We should set the priority higher if we want a router to be DR/BDR.
+When the priority is set to 0, a router will NOT become a DR/BDR.
+
+DR handles flooding of route updates. Routers send updates to the DR and the DR floods those
+out to all neighbors on the ethernet segmant.
+
+All routers form a full adjecencey with the DR/BDR and a 2-way/DROTHER with all others.
+
+### LSAs
+
+Type 1 (Router LSA):
+ - Every router sends this type to identify itself and attached segments
+ - Sent to DR/BDR
+
+Type 2 (Network LSA):
+ - Sent out by DR/BDR on a broadcast to identiy itself and routers on the segment
+ - Point to Point (P2P) will not send this type
+
+Type 3 (Summary LSA):
+ - Used for area summerization
+ - Most used for traffic manuipulation
+
+Type 4 (Summary ASB ):
+- How we get the ASBR on a segment
+- Used to help routers in other areas OUTSIDE of the originating area find the ASBR.
+  Otherwise, they would just use the Type 1 LSA to find the ASBR in the area.
+
+Type 5 (AS External Link):
+ - What re the external routes
+
+Type 7 ():
+ - What are the external routes for the NSSA
+
+### Areas 
+
+Stub Area
+ - No type 4,5,7 LSA
+ - Gets a defualt route from ABR
+
+Total Stub
+ - No type 3,4,5,7 LSA
+ - Get defualt route
+
+Not So Stub Area
+ - Stub area with route redistribution
+ - No Type 4,5 LSA
+ - Sends Type 7 into area, at ABR turns into Type 5
+
+### Authentication
+
+Using passive interfaces 
+ - Allow interface to praticipate in OSPF proccess but does not send out Hello packets
+ - Shows as DOWN in `sh ip ospf int br`
+
+MD5 Password Authentication:
+ - Configured on the interface
+
+HMAC-SHA-512 Authentication:
+ - Allows to use key-chains
+ - Rotating password, set expire times
+
+### Commands
+
+router ospf {Process number}
+network {IP Addess} {Wildcard mask} area {Area number}
+passive-interface {Interface Number}
+
+(HMAC-SHA authentication from configure mode)
+key chain {name}
+key {number}
+cryptographic-algorithm {encryption type}
+key-string {password}
+
+-interface config: 
+ - ip ospf # area #
+ - ip ospf network {network type}
+(MD5 authentication)
+ - ip ospf message-digest {key number} md5 {password}
+ - ip ospf authentication message-digest (Turns on MD5 authentication)
+(HMAC-SHA Authentication)
+ - ip ospf authentication key-chain {name}
+
+show ip ospf int br
+show ip ospf nei
+
+
 ## EIGRP
 
 Distance-vector protocol by definition, but has some link-sate features.
