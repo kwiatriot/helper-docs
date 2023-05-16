@@ -437,9 +437,19 @@ domain-password {<i>Strong Password</i>}
 One to many in a group...
 
 224.0.0.0/24 these packets will not route past the local link.
- - 224.0.0.2 All Multicast routers
- - 224.0.0.5/6 OSPF mutlicast
- - 2224.0.0.10 EIGRP Multicast
+| Multicast Address | Description |
+|---|---|
+| 221.0.0.1 | All Hosts or all systems |
+| 224.0.0.2 | All Multicast routers |
+| 224.0.0.5 | All OSPF routers |
+| 224.0.0.6 | All OSPF DRs |
+| 224.0.0.10 | EIGRP routers |
+| 224.0.0.13 | All PIM routers |
+| 224.0.1.39 | RP announcement |
+| 224.0.1.40 | RP Discovery |
+
+Uses reservered IEEE 0100.5e00 for MAC layer. Lower 23 bits maps to Layer 3 IP muiltcast
+address.
 
 ### IGMP - Internet Group Managment Protocol
  - Layer 2 protocol to handle multicast group membership
