@@ -431,3 +431,54 @@ To set a password for a domian:
 <pre>
 domain-password {<i>Strong Password</i>}
 </pre>
+
+## Multicast
+
+One to many in a group...
+
+224.0.0.0/24 these packets will not route past the local link.
+ - 224.0.0.2 All Multicast routers
+ - 224.0.0.5/6 OSPF mutlicast
+ - 2224.0.0.10 EIGRP Multicast
+
+### IGMP - Internet Group Managment Protocol
+ - Layer 2 protocol to handle multicast group membership
+ - Join request to join group
+ - Prune messages to leave a group
+
+### RPF (Reverse Path Forwarding)
+ - Loop prevention method
+ - If it was unicast traffic, is this the route I would take
+ - Works with IGP to prevent multicast loops
+ - Relies on unicast routing table
+
+### PIM
+ - Mulitcast IGP with neighborships
+ - How mutilcast traffic gets routed
+ - (S,G) -> (Source, Group) -> (192.168.1.25, 231.1.1.1)
+ - (\*,G) -> (All sources, Group) -> (\*, 231.1.1.1)
+ 
+### Source Trees
+ - AKA SPT (Shortest Path Tree)
+ - PIM default sends out packets all mutilcast interfaces
+ - Routers use the source address to find shortest path
+ - Easy to deploy, but lots of traffic overhead
+ - Best suited for densely populated receivers
+
+### Shared Trees
+ - Best suited for sparsely poulated receivers
+ - Uses a RP (Rendezvous Point) to centrialize information for that group
+
+### RP
+- Static assignment
+    - All groups
+    - Specific groups
+- AutoRP (Cisco Specific)
+    - All groups
+    - Specific groups via ACL
+    - RP Announcement
+    - RP Mapping Node (Usually same device)
+        - Helps with RP Discovery messages
+- BSR (Boot Strap Router configuration), industry standard similar to AutoRP
+    - Configure boot starp canidate
+    - Discovery auto populates through
