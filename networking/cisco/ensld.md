@@ -453,8 +453,20 @@ address.
 
 ### IGMP - Internet Group Managment Protocol
  - Layer 2 protocol to handle multicast group membership
+#### v1
  - Join request to join group
+ - Query message to see if any hosts want stream
+ - Dead interval caused long time to leave group
  - Prune messages to leave a group
+ - Does not track hosts requesting group
+#### v2
+ - Added a leave group message, triggers query
+ - Query sent out to see if hosts still want stream
+#### v3
+ - Added support for SSM (Source Specific Mcast)
+#### IGMP Snooping
+ - Standards based protocol
+ - Used to track mcast requests by MAC address 
 
 ### RPF (Reverse Path Forwarding)
  - Loop prevention method
@@ -474,10 +486,13 @@ address.
  - Routers use the source address to find shortest path
  - Easy to deploy, but lots of traffic overhead
  - Best suited for densely populated receivers
+ - PIM-DM (Pim dense Mode)
 
 ### Shared Trees
  - Best suited for sparsely poulated receivers
  - Uses a RP (Rendezvous Point) to centrialize information for that group
+ - After source is identified traffic ends up using SPT and not through RP
+ - PIM-SM (Pim sparse mode)
 
 ### RP
 - Static assignment
@@ -492,3 +507,36 @@ address.
 - BSR (Boot Strap Router configuration), industry standard similar to AutoRP
     - Configure boot starp canidate
     - Discovery auto populates through
+
+### Bidir-PIM
+ - Bi-direction PIM, used for bi-drectional multicast
+ - PIM-SM deployment
+ - Keeps RP in the mix and doesn tnot use a SPT
+
+### SSM
+ - Source Specific multicast
+ - PIM-SM deployment
+ - No RP
+ - Uses IGMP v3
+ - Allows for load balanceing from multiple sources
+ - Used in service provider and broadcast TV
+
+### MSDP
+ - Used to connect RP together across different multicast domains
+ - Typcially used with MP-BGP
+
+### Commands
+
+Turning on multicast routing for the global routing table
+ - `ip multicast-routing`
+ - add `vrf` and specify the name to add to a specfific vrf
+
+To define an RP
+ - `ip pim rp-addresss {IP_address}`
+
+Under interface config (can be a range as well)
+ - `ip pim dense-mode`
+ - `ip pim sparse-mode`
+
+Show the Multicast routing table
+ - `show ip mroute`
