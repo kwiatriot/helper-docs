@@ -307,7 +307,7 @@ Level 1
 - Intra-area IS to IS
 
 Level 2
-- Interarea IS to IS
+- Inter-area IS to IS
 
 Level 3
 - AS to AS _(Cisco does not support level 3)_
